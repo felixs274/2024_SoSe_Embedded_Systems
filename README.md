@@ -1,0 +1,34 @@
+# 2024 SoSe Embedded Systems
+
+- [ ] 1 - Digitale Ports
+    - [x] Aufgabe 1 ✅
+    - [x] Aufgabe 2 ✅
+    - [x] Aufgabe 3 ✅
+    - [ ] Aufgabe 4
+- [ ] 2 - Externe Interrupts
+    - [ ] Aufgabe 1
+    - [ ] Aufgabe 2
+    - [ ] Aufgabe 3
+    - [ ] Aufgabe 4
+- [ ] 3 - Timer und Hardware Abstraction Layer
+    - [ ] Aufgabe 1
+    - [ ] Aufgabe 2
+- [ ] 4 - UART
+    - [ ] Aufgabe 1
+    - [ ] Aufgabe 2
+- [ ] 5 - Speicher
+    - [ ] Aufgabe 1
+    - [ ] Aufgabe 2
+    - [ ] Aufgabe 3
+- [ ] 6a - Analoge Eingänge
+    - [ ] Aufgabe 1
+    - [ ] Aufgabe 2
+- [ ] 6b - Analoge Ausgänge
+    - [ ] Aufgabe 1
+    - [ ] Aufgabe 2
+    - [ ] Aufgabe 3
+    - [ ] Aufgabe 4
+- [ ] 7 - TWI und RTC
+    - [ ] Aufgabe 1
+- [ ] 9 - Bootloader
+    - [ ] Aufgabe 1
