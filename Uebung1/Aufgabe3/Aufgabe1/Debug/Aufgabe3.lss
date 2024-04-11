@@ -73,10 +73,10 @@ Disassembly of section .text:
 	char mask = 0b00000111; // Create mask for the first 3 bits
 	char maxCounter = 0;
 	char counter = maxCounter;
-	DDRB |= (1 << DDB2) | (1 << DDB1) | (1 << DDB0);
-  80:	84 b1       	in	r24, 0x04	; 4
+	DDRD |= (1 << DDD2) | (1 << DDD1) | (1 << DDD0);
+  80:	8a b1       	in	r24, 0x0a	; 10
   82:	87 60       	ori	r24, 0x07	; 7
-  84:	84 b9       	out	0x04, r24	; 4
+  84:	8a b9       	out	0x0a, r24	; 10
 	PORTC |= (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC3) | (1 << PORTC4);
   86:	88 b1       	in	r24, 0x08	; 8
   88:	8f 61       	ori	r24, 0x1F	; 31
@@ -119,7 +119,7 @@ int main(void) {
 		
 		if (counter <= 0) counter = maxCounter;
 		if(timerEnabled) counter--;
-		PORTB = (PORTB & ~mask) | ~((counter - 1) / 10);
+		PORTD = (PORTD & ~mask) | ~((counter - 1) / 10);
   96:	2a e0       	ldi	r18, 0x0A	; 10
   98:	30 e0       	ldi	r19, 0x00	; 0
 			if (PINC & (1 << PINC4)) switchStates |= 1 << 2;
@@ -137,7 +137,7 @@ int main(void) {
 			timerEnabled = 1;
   9c:	01 e0       	ldi	r16, 0x01	; 1
   9e:	03 c0       	rjmp	.+6      	; 0xa6 <main+0x26>
-	DDRB |= (1 << DDB2) | (1 << DDB1) | (1 << DDB0);
+	DDRD |= (1 << DDD2) | (1 << DDD1) | (1 << DDD0);
 	PORTC |= (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC3) | (1 << PORTC4);
 
 	while(1) {
@@ -149,8 +149,8 @@ int main(void) {
 		if(timerEnabled) counter--;
   a6:	c1 11       	cpse	r28, r1
   a8:	e1 50       	subi	r30, 0x01	; 1
-		PORTB = (PORTB & ~mask) | ~((counter - 1) / 10);
-  aa:	f5 b1       	in	r31, 0x05	; 5
+		PORTD = (PORTD & ~mask) | ~((counter - 1) / 10);
+  aa:	fb b1       	in	r31, 0x0b	; 11
   ac:	8e 2f       	mov	r24, r30
   ae:	90 e0       	ldi	r25, 0x00	; 0
   b0:	01 97       	sbiw	r24, 0x01	; 1
@@ -159,7 +159,7 @@ int main(void) {
   b8:	60 95       	com	r22
   ba:	f8 7f       	andi	r31, 0xF8	; 248
   bc:	f6 2b       	or	r31, r22
-  be:	f5 b9       	out	0x05, r31	; 5
+  be:	fb b9       	out	0x0b, r31	; 11
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));

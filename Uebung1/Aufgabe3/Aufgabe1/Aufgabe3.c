@@ -18,14 +18,14 @@ int main(void) {
 	char mask = 0b00000111; // Create mask for the first 3 bits
 	char maxCounter = 0;
 	char counter = maxCounter;
-	DDRB |= (1 << DDB2) | (1 << DDB1) | (1 << DDB0);
+	DDRD |= (1 << DDD2) | (1 << DDD1) | (1 << DDD0);
 	PORTC |= (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC3) | (1 << PORTC4);
 
 	while(1) {
 		
 		if (counter <= 0) counter = maxCounter;
 		if(timerEnabled) counter--;
-		PORTB = (PORTB & ~mask) | ~((counter - 1) / 10);
+		PORTD = (PORTD & ~mask) | ~((counter - 1) / 10);
 		_delay_ms(100);
 		
 		// Reset Counter and Stop
