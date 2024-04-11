@@ -3,25 +3,25 @@ Aufgabe1.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000a0  00000000  00000000  00000054  2**1
+  0 .text         000000b8  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .comment      00000030  00000000  00000000  000000f4  2**0
+  1 .comment      00000030  00000000  00000000  0000010c  2**0
                   CONTENTS, READONLY
-  2 .debug_aranges 00000020  00000000  00000000  00000124  2**0
+  2 .debug_aranges 00000020  00000000  00000000  0000013c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   000000ac  00000000  00000000  00000144  2**0
+  3 .debug_info   0000012e  00000000  00000000  0000015c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 0000006d  00000000  00000000  000001f0  2**0
+  4 .debug_abbrev 000000d3  00000000  00000000  0000028a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   000000bb  00000000  00000000  0000025d  2**0
+  5 .debug_line   0000013f  00000000  00000000  0000035d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  00000024  00000000  00000000  00000318  2**2
+  6 .debug_frame  00000024  00000000  00000000  0000049c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    00000135  00000000  00000000  0000033c  2**0
+  7 .debug_str    00000180  00000000  00000000  000004c0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    00000024  00000000  00000000  00000471  2**0
+  8 .debug_loc    00000024  00000000  00000000  00000640  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_ranges 00000010  00000000  00000000  00000495  2**0
+  9 .debug_ranges 00000010  00000000  00000000  00000664  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -62,48 +62,67 @@ Disassembly of section .text:
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
   74:	0e 94 40 00 	call	0x80	; 0x80 <main>
-  78:	0c 94 4e 00 	jmp	0x9c	; 0x9c <_exit>
+  78:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <main>:
+
+
 int main(void)
 {
 	
-	//DDRB = 0x07; // Set first 3 Pins of Port B as outputs
-	
-	DDRB = (1 << DDB0) | (1 << DDB1) | (1 << DDB2);
+	DDRB = (1 << DDB0) | (1 << DDB1) | (1 << DDB2); // Set first 3 bits of PORTB as outputs
   80:	87 e0       	ldi	r24, 0x07	; 7
   82:	84 b9       	out	0x04, r24	; 4
+	//short mask = 0b00000111; // Create mask for the first 3 bits
 
-    while(1)
-    {	
+	while(1)
+	{
 		
-		for(short counter = 0x00; counter <= 0x07; counter++){
+		for(short counter = 0; counter <= 7; counter++){
   84:	80 e0       	ldi	r24, 0x00	; 0
   86:	90 e0       	ldi	r25, 0x00	; 0
-  88:	30 e0       	ldi	r19, 0x00	; 0
-  8a:	20 e0       	ldi	r18, 0x00	; 0
+  88:	40 e0       	ldi	r20, 0x00	; 0
+  8a:	30 e0       	ldi	r19, 0x00	; 0
 
-			PORTB = (0xFF ^ counter)^0xFF;
-  8c:	85 b9       	out	0x05, r24	; 5
-	DDRB = (1 << DDB0) | (1 << DDB1) | (1 << DDB2);
+			PORTB = (PORTB & ~(0b00000111)) | counter;
+  8c:	25 b1       	in	r18, 0x05	; 5
+  8e:	28 7f       	andi	r18, 0xF8	; 248
+  90:	28 2b       	or	r18, r24
+  92:	25 b9       	out	0x05, r18	; 5
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
 
-    while(1)
-    {	
+	__builtin_avr_delay_cycles(__ticks_dc);
+  94:	2f ef       	ldi	r18, 0xFF	; 255
+  96:	53 ed       	ldi	r21, 0xD3	; 211
+  98:	60 e3       	ldi	r22, 0x30	; 48
+  9a:	21 50       	subi	r18, 0x01	; 1
+  9c:	50 40       	sbci	r21, 0x00	; 0
+  9e:	60 40       	sbci	r22, 0x00	; 0
+  a0:	e1 f7       	brne	.-8      	; 0x9a <main+0x1a>
+  a2:	00 c0       	rjmp	.+0      	; 0xa4 <main+0x24>
+  a4:	00 00       	nop
+	//short mask = 0b00000111; // Create mask for the first 3 bits
+
+	while(1)
+	{
 		
-		for(short counter = 0x00; counter <= 0x07; counter++){
-  8e:	01 96       	adiw	r24, 0x01	; 1
-  90:	88 30       	cpi	r24, 0x08	; 8
-  92:	91 05       	cpc	r25, r1
-  94:	dc f3       	brlt	.-10     	; 0x8c <main+0xc>
-  96:	83 2f       	mov	r24, r19
-  98:	92 2f       	mov	r25, r18
-  9a:	f8 cf       	rjmp	.-16     	; 0x8c <main+0xc>
+		for(short counter = 0; counter <= 7; counter++){
+  a6:	01 96       	adiw	r24, 0x01	; 1
+  a8:	88 30       	cpi	r24, 0x08	; 8
+  aa:	91 05       	cpc	r25, r1
+  ac:	7c f3       	brlt	.-34     	; 0x8c <main+0xc>
+  ae:	84 2f       	mov	r24, r20
+  b0:	93 2f       	mov	r25, r19
+  b2:	ec cf       	rjmp	.-40     	; 0x8c <main+0xc>
 
-0000009c <_exit>:
-  9c:	f8 94       	cli
+000000b4 <_exit>:
+  b4:	f8 94       	cli
 
-0000009e <__stop_program>:
-  9e:	ff cf       	rjmp	.-2      	; 0x9e <__stop_program>
+000000b6 <__stop_program>:
+  b6:	ff cf       	rjmp	.-2      	; 0xb6 <__stop_program>

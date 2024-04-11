@@ -1,0 +1,297 @@
+
+Aufgabe3.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000176  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .comment      00000030  00000000  00000000  000001ca  2**0
+                  CONTENTS, READONLY
+  2 .debug_aranges 00000020  00000000  00000000  000001fa  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   0000016a  00000000  00000000  0000021a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 000000d9  00000000  00000000  00000384  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   0000017a  00000000  00000000  0000045d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000024  00000000  00000000  000005d8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    000001ad  00000000  00000000  000005fc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    00000183  00000000  00000000  000007a9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_ranges 00000010  00000000  00000000  0000092c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 40 00 	call	0x80	; 0x80 <main>
+  78:	0c 94 b9 00 	jmp	0x172	; 0x172 <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <main>:
+	char switchStates = 0;	//0: 2^0, 1: 2^1, 2: 2^2
+	char timerEnabled = 0;
+	char mask = 0b00000111; // Create mask for the first 3 bits
+	char maxCounter = 0;
+	char counter = maxCounter;
+	DDRB |= (1 << DDB2) | (1 << DDB1) | (1 << DDB0);
+  80:	84 b1       	in	r24, 0x04	; 4
+  82:	87 60       	ori	r24, 0x07	; 7
+  84:	84 b9       	out	0x04, r24	; 4
+	PORTC |= (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC3) | (1 << PORTC4);
+  86:	88 b1       	in	r24, 0x08	; 8
+  88:	8f 61       	ori	r24, 0x1F	; 31
+  8a:	88 b9       	out	0x08, r24	; 8
+int main(void) {
+	char buttonStates = 0;	//0: Reset, 1: Start
+	char switchStates = 0;	//0: 2^0, 1: 2^1, 2: 2^2
+	char timerEnabled = 0;
+	char mask = 0b00000111; // Create mask for the first 3 bits
+	char maxCounter = 0;
+  8c:	d0 e0       	ldi	r29, 0x00	; 0
+
+
+int main(void) {
+	char buttonStates = 0;	//0: Reset, 1: Start
+	char switchStates = 0;	//0: 2^0, 1: 2^1, 2: 2^2
+	char timerEnabled = 0;
+  8e:	c0 e0       	ldi	r28, 0x00	; 0
+#include <util/delay.h>
+
+
+int main(void) {
+	char buttonStates = 0;	//0: Reset, 1: Start
+	char switchStates = 0;	//0: 2^0, 1: 2^1, 2: 2^2
+  90:	10 e0       	ldi	r17, 0x00	; 0
+#include <avr/io.h>
+#include <util/delay.h>
+
+
+int main(void) {
+	char buttonStates = 0;	//0: Reset, 1: Start
+  92:	40 e0       	ldi	r20, 0x00	; 0
+	char switchStates = 0;	//0: 2^0, 1: 2^1, 2: 2^2
+	char timerEnabled = 0;
+	char mask = 0b00000111; // Create mask for the first 3 bits
+	char maxCounter = 0;
+  94:	e0 e0       	ldi	r30, 0x00	; 0
+
+	while(1) {
+		
+		if (counter <= 0) counter = maxCounter;
+		if(timerEnabled) counter--;
+		PORTB = (PORTB & ~mask) | ~((counter - 1) / 10);
+  96:	2a e0       	ldi	r18, 0x0A	; 10
+  98:	30 e0       	ldi	r19, 0x00	; 0
+			if (PINC & (1 << PINC4)) switchStates |= 1 << 2;
+			else switchStates &= ~(1 << 2);
+			maxCounter = (switchStates*10)+10;
+			buttonStates &= ~(1 << 0);
+			counter = maxCounter;
+			timerEnabled = 0;
+  9a:	f1 2c       	mov	r15, r1
+		}
+		// Start Counter
+		if (PINC & (1 << PINC1)) buttonStates |= 1 << 1;
+		else if (buttonStates & (1 << 1)) {
+			buttonStates &= ~(1 << 1);
+			timerEnabled = 1;
+  9c:	01 e0       	ldi	r16, 0x01	; 1
+  9e:	03 c0       	rjmp	.+6      	; 0xa6 <main+0x26>
+	DDRB |= (1 << DDB2) | (1 << DDB1) | (1 << DDB0);
+	PORTC |= (1 << PORTC0) | (1 << PORTC1) | (1 << PORTC2) | (1 << PORTC3) | (1 << PORTC4);
+
+	while(1) {
+		
+		if (counter <= 0) counter = maxCounter;
+  a0:	e1 11       	cpse	r30, r1
+  a2:	01 c0       	rjmp	.+2      	; 0xa6 <main+0x26>
+  a4:	ed 2f       	mov	r30, r29
+		if(timerEnabled) counter--;
+  a6:	c1 11       	cpse	r28, r1
+  a8:	e1 50       	subi	r30, 0x01	; 1
+		PORTB = (PORTB & ~mask) | ~((counter - 1) / 10);
+  aa:	f5 b1       	in	r31, 0x05	; 5
+  ac:	8e 2f       	mov	r24, r30
+  ae:	90 e0       	ldi	r25, 0x00	; 0
+  b0:	01 97       	sbiw	r24, 0x01	; 1
+  b2:	b9 01       	movw	r22, r18
+  b4:	0e 94 91 00 	call	0x122	; 0x122 <__divmodhi4>
+  b8:	60 95       	com	r22
+  ba:	f8 7f       	andi	r31, 0xF8	; 248
+  bc:	f6 2b       	or	r31, r22
+  be:	f5 b9       	out	0x05, r31	; 5
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  c0:	5f ef       	ldi	r21, 0xFF	; 255
+  c2:	81 ee       	ldi	r24, 0xE1	; 225
+  c4:	94 e0       	ldi	r25, 0x04	; 4
+  c6:	51 50       	subi	r21, 0x01	; 1
+  c8:	80 40       	sbci	r24, 0x00	; 0
+  ca:	90 40       	sbci	r25, 0x00	; 0
+  cc:	e1 f7       	brne	.-8      	; 0xc6 <main+0x46>
+  ce:	00 c0       	rjmp	.+0      	; 0xd0 <main+0x50>
+  d0:	00 00       	nop
+		_delay_ms(100);
+		
+		// Reset Counter and Stop
+		if (PINC & (1 << PINC0)) buttonStates |= 1 << 0;
+  d2:	30 9b       	sbis	0x06, 0	; 6
+  d4:	02 c0       	rjmp	.+4      	; 0xda <main+0x5a>
+  d6:	41 60       	ori	r20, 0x01	; 1
+  d8:	1b c0       	rjmp	.+54     	; 0x110 <main+0x90>
+		else if (buttonStates & (1 << 0)) {
+  da:	40 ff       	sbrs	r20, 0
+  dc:	19 c0       	rjmp	.+50     	; 0x110 <main+0x90>
+			if (PINC & (1 << PINC2)) switchStates |= 1 << 0;
+  de:	32 9b       	sbis	0x06, 2	; 6
+  e0:	02 c0       	rjmp	.+4      	; 0xe6 <main+0x66>
+  e2:	11 60       	ori	r17, 0x01	; 1
+  e4:	01 c0       	rjmp	.+2      	; 0xe8 <main+0x68>
+			else switchStates &= ~(1 << 0);
+  e6:	1e 7f       	andi	r17, 0xFE	; 254
+			if (PINC & (1 << PINC3)) switchStates |= 1 << 1;
+  e8:	33 9b       	sbis	0x06, 3	; 6
+  ea:	02 c0       	rjmp	.+4      	; 0xf0 <main+0x70>
+  ec:	12 60       	ori	r17, 0x02	; 2
+  ee:	01 c0       	rjmp	.+2      	; 0xf2 <main+0x72>
+			else switchStates &= ~(1 << 1);
+  f0:	1d 7f       	andi	r17, 0xFD	; 253
+			if (PINC & (1 << PINC4)) switchStates |= 1 << 2;
+  f2:	34 9b       	sbis	0x06, 4	; 6
+  f4:	02 c0       	rjmp	.+4      	; 0xfa <main+0x7a>
+  f6:	14 60       	ori	r17, 0x04	; 4
+  f8:	01 c0       	rjmp	.+2      	; 0xfc <main+0x7c>
+			else switchStates &= ~(1 << 2);
+  fa:	1b 7f       	andi	r17, 0xFB	; 251
+			maxCounter = (switchStates*10)+10;
+  fc:	d1 2f       	mov	r29, r17
+  fe:	dd 0f       	add	r29, r29
+ 100:	de 5f       	subi	r29, 0xFE	; 254
+ 102:	8d 2f       	mov	r24, r29
+ 104:	88 0f       	add	r24, r24
+ 106:	88 0f       	add	r24, r24
+ 108:	d8 0f       	add	r29, r24
+			buttonStates &= ~(1 << 0);
+ 10a:	4e 7f       	andi	r20, 0xFE	; 254
+			counter = maxCounter;
+ 10c:	ed 2f       	mov	r30, r29
+			timerEnabled = 0;
+ 10e:	cf 2d       	mov	r28, r15
+		}
+		// Start Counter
+		if (PINC & (1 << PINC1)) buttonStates |= 1 << 1;
+ 110:	31 9b       	sbis	0x06, 1	; 6
+ 112:	02 c0       	rjmp	.+4      	; 0x118 <main+0x98>
+ 114:	42 60       	ori	r20, 0x02	; 2
+ 116:	c4 cf       	rjmp	.-120    	; 0xa0 <main+0x20>
+		else if (buttonStates & (1 << 1)) {
+ 118:	41 ff       	sbrs	r20, 1
+ 11a:	c2 cf       	rjmp	.-124    	; 0xa0 <main+0x20>
+			buttonStates &= ~(1 << 1);
+ 11c:	4d 7f       	andi	r20, 0xFD	; 253
+			timerEnabled = 1;
+ 11e:	c0 2f       	mov	r28, r16
+ 120:	bf cf       	rjmp	.-130    	; 0xa0 <main+0x20>
+
+00000122 <__divmodhi4>:
+ 122:	97 fb       	bst	r25, 7
+ 124:	07 2e       	mov	r0, r23
+ 126:	16 f4       	brtc	.+4      	; 0x12c <__divmodhi4+0xa>
+ 128:	00 94       	com	r0
+ 12a:	07 d0       	rcall	.+14     	; 0x13a <__divmodhi4_neg1>
+ 12c:	77 fd       	sbrc	r23, 7
+ 12e:	09 d0       	rcall	.+18     	; 0x142 <__divmodhi4_neg2>
+ 130:	0e 94 a5 00 	call	0x14a	; 0x14a <__udivmodhi4>
+ 134:	07 fc       	sbrc	r0, 7
+ 136:	05 d0       	rcall	.+10     	; 0x142 <__divmodhi4_neg2>
+ 138:	3e f4       	brtc	.+14     	; 0x148 <__divmodhi4_exit>
+
+0000013a <__divmodhi4_neg1>:
+ 13a:	90 95       	com	r25
+ 13c:	81 95       	neg	r24
+ 13e:	9f 4f       	sbci	r25, 0xFF	; 255
+ 140:	08 95       	ret
+
+00000142 <__divmodhi4_neg2>:
+ 142:	70 95       	com	r23
+ 144:	61 95       	neg	r22
+ 146:	7f 4f       	sbci	r23, 0xFF	; 255
+
+00000148 <__divmodhi4_exit>:
+ 148:	08 95       	ret
+
+0000014a <__udivmodhi4>:
+ 14a:	aa 1b       	sub	r26, r26
+ 14c:	bb 1b       	sub	r27, r27
+ 14e:	51 e1       	ldi	r21, 0x11	; 17
+ 150:	07 c0       	rjmp	.+14     	; 0x160 <__udivmodhi4_ep>
+
+00000152 <__udivmodhi4_loop>:
+ 152:	aa 1f       	adc	r26, r26
+ 154:	bb 1f       	adc	r27, r27
+ 156:	a6 17       	cp	r26, r22
+ 158:	b7 07       	cpc	r27, r23
+ 15a:	10 f0       	brcs	.+4      	; 0x160 <__udivmodhi4_ep>
+ 15c:	a6 1b       	sub	r26, r22
+ 15e:	b7 0b       	sbc	r27, r23
+
+00000160 <__udivmodhi4_ep>:
+ 160:	88 1f       	adc	r24, r24
+ 162:	99 1f       	adc	r25, r25
+ 164:	5a 95       	dec	r21
+ 166:	a9 f7       	brne	.-22     	; 0x152 <__udivmodhi4_loop>
+ 168:	80 95       	com	r24
+ 16a:	90 95       	com	r25
+ 16c:	bc 01       	movw	r22, r24
+ 16e:	cd 01       	movw	r24, r26
+ 170:	08 95       	ret
+
+00000172 <_exit>:
+ 172:	f8 94       	cli
+
+00000174 <__stop_program>:
+ 174:	ff cf       	rjmp	.-2      	; 0x174 <__stop_program>
