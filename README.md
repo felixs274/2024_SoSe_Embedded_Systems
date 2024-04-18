@@ -1,13 +1,13 @@
 # 2024 SoSe Embedded Systems
 
-- [ ] 1 - Digitale Ports
+- [x] 1 - Digitale Ports
     - [x] Aufgabe 1 ✅
     - [x] Aufgabe 2 ✅
     - [x] Aufgabe 3 ✅
-    - [ ] Aufgabe 4
+    - [x] Aufgabe 4 ✅
 - [ ] 2 - Externe Interrupts
-    - [ ] Aufgabe 1
-    - [ ] Aufgabe 2
+    - [x] Aufgabe 1 ✅
+    - [x] Aufgabe 2 ✅
     - [ ] Aufgabe 3
     - [ ] Aufgabe 4
 - [ ] 3 - Timer und Hardware Abstraction Layer
